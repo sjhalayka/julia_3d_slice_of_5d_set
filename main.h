@@ -133,9 +133,6 @@ quintonion pow_number_type(quintonion& in, float exponent)
 			out.vertex_data[i] = in.vertex_data[i] * self_dot_beta * sin(fabs_beta * acos(in.vertex_data[0] / all_len)) / imag_len;
 	}
 
-	if (beta < 0)
-		out = conj_number_type(out) / powf(out.magnitude(), 2.0f);
-
 	return out;
 }
 
