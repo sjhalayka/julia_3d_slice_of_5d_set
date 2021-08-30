@@ -102,7 +102,7 @@ quintonion conj_number_type(quintonion& in)
 quintonion pow_number_type(quintonion& in, float exponent)
 {
 	const float beta = exponent;
-	const float fabs_beta = fabsf(beta);
+
 	float all_self_dot = 0;
 	float imag_self_dot = 0;
 	quintonion out;
@@ -123,14 +123,14 @@ quintonion pow_number_type(quintonion& in, float exponent)
 
 	const float all_len = sqrtf(all_self_dot);
 	const float imag_len = sqrtf(imag_self_dot);
-	const float self_dot_beta = powf(all_self_dot, fabs_beta / 2.0f);
+	const float self_dot_beta = powf(all_self_dot, beta / 2.0f);
 
-	out.vertex_data[0] = self_dot_beta * std::cos(fabs_beta * std::acos(in.vertex_data[0] / all_len));
+	out.vertex_data[0] = self_dot_beta * std::cos(beta * std::acos(in.vertex_data[0] / all_len));
 
 	if (imag_len != 0)
 	{
 		for (size_t i = 1; i < out.vertex_length; i++)
-			out.vertex_data[i] = in.vertex_data[i] * self_dot_beta * sin(fabs_beta * acos(in.vertex_data[0] / all_len)) / imag_len;
+			out.vertex_data[i] = in.vertex_data[i] * self_dot_beta * sin(beta * acos(in.vertex_data[0] / all_len)) / imag_len;
 	}
 
 	return out;
