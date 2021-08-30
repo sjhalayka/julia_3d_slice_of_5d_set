@@ -103,17 +103,17 @@ quintonion pow_number_type(quintonion& in, float exponent)
 {
 	const float beta = exponent;
 
-	float all_self_dot = 0;
-	float imag_self_dot = 0;
+	float d = 0;
+	float e = 0;
 	quintonion out;
 
 	for (size_t i = 0; i < in.vertex_length; i++)
-		all_self_dot += (in.vertex_data[i] * in.vertex_data[i]);
+		d += (in.vertex_data[i] * in.vertex_data[i]);
 
 	for (size_t i = 1; i < in.vertex_length; i++)
-		imag_self_dot += (in.vertex_data[i] * in.vertex_data[i]);
+		e += (in.vertex_data[i] * in.vertex_data[i]);
 
-	if (all_self_dot == 0)
+	if (d == 0)
 	{
 		for (size_t i = 0; i < out.vertex_length; i++)
 			out.vertex_data[i] = 0;
@@ -121,16 +121,18 @@ quintonion pow_number_type(quintonion& in, float exponent)
 		return out;
 	}
 
-	const float all_len = sqrtf(all_self_dot);
-	const float imag_len = sqrtf(imag_self_dot);
-	const float self_dot_beta = powf(all_self_dot, beta / 2.0f);
+	const float l_d = sqrtf(d);
+	const float l_e = sqrtf(e);
+	const float d_b2 = powf(d, beta / 2.0f);
 
-	out.vertex_data[0] = self_dot_beta * std::cos(beta * std::acos(in.vertex_data[0] / all_len));
+	const float theta = beta * acos(in.vertex_data[0] / l_d);
 
-	if (imag_len != 0)
+	out.vertex_data[0] = d_b2 * cos(theta);
+
+	if (e != 0)
 	{
 		for (size_t i = 1; i < out.vertex_length; i++)
-			out.vertex_data[i] = in.vertex_data[i] * self_dot_beta * sin(beta * acos(in.vertex_data[0] / all_len)) / imag_len;
+			out.vertex_data[i] = (in.vertex_data[i]/l_e) * d_b2 * sin(theta);
 	}
 
 	return out;
