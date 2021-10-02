@@ -21,11 +21,11 @@ int main(void)
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
 	quintonion C;
-	C.vertex_data[0] = -0.3f;
-	C.vertex_data[1] = -0.2f;
+	C.vertex_data[0] = 0.3f;
+	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
-	C.vertex_data[3] = -0.2f;
-	C.vertex_data[4] = 0.5f;
+	C.vertex_data[3] = 0.2f;
+	C.vertex_data[4] = 0.0f;
 
 	quintonion Z;
 

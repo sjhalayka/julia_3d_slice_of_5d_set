@@ -83,8 +83,108 @@ bool write_triangles_to_binary_stereo_lithography_file(const vector<triangle> &t
 }
 
 
+quintonion sin(const quintonion& in)
+{
+	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
 
 
+	float e =	in.vertex_data[1] * in.vertex_data[1] +
+				in.vertex_data[2] * in.vertex_data[2] +
+				in.vertex_data[3] * in.vertex_data[3] +
+				in.vertex_data[4] * in.vertex_data[4];
+
+	//	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	out.vertex_data[0] = sin(in.vertex_data[0]) * cosh(l_e);
+	out.vertex_data[1] = in.vertex_data[1] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[2] = in.vertex_data[2] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[3] = in.vertex_data[3] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[4] = in.vertex_data[4] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+
+	return out;
+}
+
+quintonion exp(const quintonion& in)
+{
+	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	//	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	out.vertex_data[0] = exp(in.vertex_data[0]) * cos(l_e);
+	out.vertex_data[1] = in.vertex_data[1] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+	out.vertex_data[2] = in.vertex_data[2] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+	out.vertex_data[3] = in.vertex_data[3] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+	out.vertex_data[4] = in.vertex_data[4] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+
+	return out;
+}
+
+quintonion ln(const quintonion& in)
+{
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	out.vertex_data[0] = log(l_d);
+	out.vertex_data[1] = in.vertex_data[1] / l_e * acos(in.vertex_data[0] / l_d);
+	out.vertex_data[2] = in.vertex_data[2] / l_e * acos(in.vertex_data[0] / l_d);
+	out.vertex_data[3] = in.vertex_data[3] / l_e * acos(in.vertex_data[0] / l_d);
+	out.vertex_data[4] = in.vertex_data[4] / l_e * acos(in.vertex_data[0] / l_d);
+
+	return out;
+}
+
+quaternion traditional_mul(const quaternion& in_a, const quaternion& in_b)
+{
+	quaternion out;
+
+	// perform traditional multiply
+	out.x = in_a.x * in_b.x - in_a.y * in_b.y - in_a.z * in_b.z - in_a.w * in_b.w;
+	out.y = in_a.x * in_b.y + in_a.y * in_b.x + in_a.z * in_b.w - in_a.w * in_b.z;
+	out.z = in_a.x * in_b.z - in_a.y * in_b.w + in_a.z * in_b.x + in_a.w * in_b.y;
+	out.w = in_a.x * in_b.w + in_a.y * in_b.z - in_a.z * in_b.y + in_a.w * in_b.x;
+
+	return out;
+}
+
+quintonion mul(const quintonion& in_a, const quintonion& in_b)
+{
+	// A*B == exp(ln(A) + ln(B))
+	quintonion ln_a = ln(in_a);
+	quintonion ln_b = ln(in_b);
+
+	quintonion out;
+
+	out.vertex_data[0] = ln_a.vertex_data[0] + ln_b.vertex_data[0];
+	out.vertex_data[1] = ln_a.vertex_data[1] + ln_b.vertex_data[1];
+	out.vertex_data[2] = ln_a.vertex_data[2] + ln_b.vertex_data[2];
+	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
+	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
+
+	return exp(out);
+}
 
 
 quintonion conj_number_type(quintonion& in)
@@ -159,7 +259,9 @@ inline float iterate(
 
 	for (short unsigned int i = 0; i < max_iterations; i++)
 	{
-		Z = pow_number_type(Z, 2.0) + C;
+		//Z = pow_number_type(Z, 2.0) + C;
+
+		Z = sin(Z) + mul(C, sin(Z));
 
 		if (Z.magnitude() >= threshold)
 			break;
