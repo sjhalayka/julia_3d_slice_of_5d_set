@@ -33,12 +33,32 @@ public:
 		return sqrtf(all_self_dot);
 	}
 
+	float imaginary_magnitude(void)
+	{
+		float all_self_dot = 0;
+
+		for (size_t i = 1; i < vertex_length; i++)
+			all_self_dot += (vertex_data[i] * vertex_data[i]);
+
+		return sqrtf(all_self_dot);
+	}
+
 	quintonion operator+(const quintonion& right) const
 	{
 		quintonion out;
 
 		for (size_t i = 0; i < right.vertex_length; i++)
 			out.vertex_data[i] = vertex_data[i] + right.vertex_data[i];
+
+		return out;
+	}
+
+	quintonion operator-(const quintonion& right) const
+	{
+		quintonion out;
+
+		for (size_t i = 0; i < right.vertex_length; i++)
+			out.vertex_data[i] = vertex_data[i] - right.vertex_data[i];
 
 		return out;
 	}
@@ -51,6 +71,15 @@ public:
 			out.vertex_data[i] = vertex_data[i] / right;
 
 		return out;
+	}
+
+	bool operator==(const quintonion& rhs)
+	{
+		for (size_t i = 0; i < vertex_length; i++)
+			if (vertex_data[i] != rhs.vertex_data[i])
+				return false;
+
+		return true;
 	}
 
 	size_t vertex_length = 5;

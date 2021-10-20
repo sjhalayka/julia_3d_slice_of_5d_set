@@ -247,21 +247,19 @@ inline float iterate(
 	const short unsigned int max_iterations,
 	const float threshold)
 {
-	// Uncomment these lines for the Mandelbrot set
-	//C = Z;
-
-	//Z.vertex_data[0] = 0.0f;
-	//Z.vertex_data[1] = 0.0f;
-	//Z.vertex_data[2] = 0.0f;
-	//Z.vertex_data[3] = 0.0f;
-	//Z.vertex_data[4] = 0.0f;
-
-
 	for (short unsigned int i = 0; i < max_iterations; i++)
 	{
-		//Z = pow_number_type(Z, 2.0) + C;
+		quintonion Z_orig = Z;
 
-		Z = sin(Z) + mul(C, sin(Z));
+		//quintonion Z_base = Z;
+		//Z = mul(Z, Z_base);
+		//Z = mul(Z, Z_base);
+		//Z = mul(Z, Z_base);
+		//Z = Z + C;
+
+		Z = pow_number_type(Z_orig, 4.0) + C;
+
+		//Z = sin(Z) + mul(sin(Z), C);
 
 		if (Z.magnitude() >= threshold)
 			break;

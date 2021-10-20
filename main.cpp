@@ -25,7 +25,7 @@ int main(void)
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
 	C.vertex_data[3] = 0.2f;
-	C.vertex_data[4] = 0.0f;
+	C.vertex_data[4] = 0.1f;
 
 	quintonion Z;
 
