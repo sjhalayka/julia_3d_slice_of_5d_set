@@ -4,7 +4,7 @@ int main(void)
 {
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 100;
+	const size_t res = 200;
 
 	const bool make_border = true;
 
@@ -25,7 +25,7 @@ int main(void)
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
 	C.vertex_data[3] = 0.2f;
-	C.vertex_data[4] = 0.1f;
+	C.vertex_data[4] = 0.0f;
 
 	quintonion Z;
 
@@ -76,8 +76,11 @@ int main(void)
 			}
 		}
 
+		size_t box_count = 0;
+
 		// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
 		tesselate_adjacent_xy_plane_pair(
+			box_count,
 			xyplane0, xyplane1,
 			z - 1,
 			triangles,

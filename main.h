@@ -110,21 +110,35 @@ quintonion sin(const quintonion& in)
 quintonion exp(const quintonion& in)
 {
 	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+
 	float e = in.vertex_data[1] * in.vertex_data[1] +
 		in.vertex_data[2] * in.vertex_data[2] +
 		in.vertex_data[3] * in.vertex_data[3] +
 		in.vertex_data[4] * in.vertex_data[4];
 
-	//	float l_d = sqrtf(d);
+	float l_d = sqrtf(d);
 	float l_e = sqrtf(e);
 
 	quintonion out;
+	
+	if (l_d != 0)
+	{
+		out.vertex_data[0] = exp(in.vertex_data[0]) * cos(l_e);
+	}
 
-	out.vertex_data[0] = exp(in.vertex_data[0]) * cos(l_e);
-	out.vertex_data[1] = in.vertex_data[1] / l_e * exp(in.vertex_data[0]) * sin(l_e);
-	out.vertex_data[2] = in.vertex_data[2] / l_e * exp(in.vertex_data[0]) * sin(l_e);
-	out.vertex_data[3] = in.vertex_data[3] / l_e * exp(in.vertex_data[0]) * sin(l_e);
-	out.vertex_data[4] = in.vertex_data[4] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+	if (l_e != 0)
+	{
+		out.vertex_data[1] = in.vertex_data[1] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+		out.vertex_data[2] = in.vertex_data[2] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+		out.vertex_data[3] = in.vertex_data[3] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+		out.vertex_data[4] = in.vertex_data[4] / l_e * exp(in.vertex_data[0]) * sin(l_e);
+	}
 
 	return out;
 }
@@ -147,11 +161,18 @@ quintonion ln(const quintonion& in)
 
 	quintonion out;
 
-	out.vertex_data[0] = log(l_d);
-	out.vertex_data[1] = in.vertex_data[1] / l_e * acos(in.vertex_data[0] / l_d);
-	out.vertex_data[2] = in.vertex_data[2] / l_e * acos(in.vertex_data[0] / l_d);
-	out.vertex_data[3] = in.vertex_data[3] / l_e * acos(in.vertex_data[0] / l_d);
-	out.vertex_data[4] = in.vertex_data[4] / l_e * acos(in.vertex_data[0] / l_d);
+	if (l_d != 0)
+	{
+		out.vertex_data[0] = log(l_d);
+	}
+
+	if (l_e != 0)
+	{
+		out.vertex_data[1] = in.vertex_data[1] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[2] = in.vertex_data[2] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[3] = in.vertex_data[3] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[4] = in.vertex_data[4] / l_e * acos(in.vertex_data[0] / l_d);
+	}
 
 	return out;
 }
@@ -251,15 +272,44 @@ inline float iterate(
 	{
 		quintonion Z_orig = Z;
 
-		//quintonion Z_base = Z;
-		//Z = mul(Z, Z_base);
-		//Z = mul(Z, Z_base);
-		//Z = mul(Z, Z_base);
-		//Z = Z + C;
+		quintonion Z_base = Z;
+		Z = mul(Z, Z_base);
+		Z = mul(Z, Z_base);
+		Z = mul(Z, Z_base);
+		Z = Z + C;
 
-		Z = pow_number_type(Z_orig, 4.0) + C;
+		// Z = pow_number_type(Z_orig, 4.0) + C;
 
-		//Z = sin(Z) + mul(sin(Z), C);
+	//	Z = sin(Z) + mul(sin(Z), C);
+
+
+		//quaternion qc;
+		//qc.x = C.vertex_data[0];
+		//qc.y = C.vertex_data[1];
+		//qc.z = C.vertex_data[2];
+		//qc.w = C.vertex_data[3];
+
+		//quintonion s = sin(Z);
+
+		//quaternion qs;
+		//qs.x = s.vertex_data[0];
+		//qs.y = s.vertex_data[1];
+		//qs.z = s.vertex_data[2];
+		//qs.w = s.vertex_data[3];
+
+		//quaternion f = traditional_mul(qs, qc);
+
+		//f.x += qs.x;
+		//f.y += qs.y;
+		//f.z += qs.z;
+		//f.w += qs.w;
+
+		//Z.vertex_data[0] = f.x;
+		//Z.vertex_data[1] = f.y;
+		//Z.vertex_data[2] = f.z;
+		//Z.vertex_data[3] = f.w;
+		//Z.vertex_data[4] = 0;
+
 
 		if (Z.magnitude() >= threshold)
 			break;
