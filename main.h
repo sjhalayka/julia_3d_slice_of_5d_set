@@ -116,7 +116,6 @@ quintonion exp(const quintonion& in)
 		in.vertex_data[3] * in.vertex_data[3] +
 		in.vertex_data[4] * in.vertex_data[4];
 
-
 	float e = in.vertex_data[1] * in.vertex_data[1] +
 		in.vertex_data[2] * in.vertex_data[2] +
 		in.vertex_data[3] * in.vertex_data[3] +
@@ -127,7 +126,7 @@ quintonion exp(const quintonion& in)
 
 	quintonion out;
 	
-	if (l_d != 0)
+	if (in.vertex_data[0] != 0)
 	{
 		out.vertex_data[0] = exp(in.vertex_data[0]) * cos(l_e);
 	}
@@ -161,7 +160,7 @@ quintonion ln(const quintonion& in)
 
 	quintonion out;
 
-	if (l_d != 0)
+	if (in.vertex_data[0] != 0)
 	{
 		out.vertex_data[0] = log(l_d);
 	}
