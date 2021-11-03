@@ -4,7 +4,7 @@ int main(void)
 {
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 200;
+	const size_t res = 100;
 
 	const bool make_border = true;
 
@@ -80,6 +80,7 @@ int main(void)
 
 		// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
 		tesselate_adjacent_xy_plane_pair(
+			C, 0.0f, max_iterations,
 			box_count,
 			xyplane0, xyplane1,
 			z - 1,

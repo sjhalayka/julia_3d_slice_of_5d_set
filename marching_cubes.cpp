@@ -333,7 +333,21 @@ vertex_3 marching_cubes::vertex_interp(const float isovalue, vertex_3 p1, vertex
 	return p1 + (p2 - p1)*mu;
 }
 
-short unsigned int marching_cubes::tesselate_grid_cube(const float isovalue, const grid_cube &grid, triangle *const triangles)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, short unsigned int max_iterations, const float isovalue, const grid_cube &grid, triangle *const triangles)
 {
 	short unsigned int cubeindex = 0;
 
@@ -352,40 +366,40 @@ short unsigned int marching_cubes::tesselate_grid_cube(const float isovalue, con
 	vertex_3 vertlist[12];
 
 	if(MC_EdgeTable[cubeindex] & 1)
-		vertlist[0] = vertex_interp(isovalue, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
+		vertlist[0] = vertex_interp_refine(C, z_w,	max_iterations, isovalue, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
 
 	if(MC_EdgeTable[cubeindex] & 2)
-		vertlist[1] = vertex_interp(isovalue, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
+		vertlist[1] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
 
 	if(MC_EdgeTable[cubeindex] & 4)
-		vertlist[2] = vertex_interp(isovalue, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
+		vertlist[2] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
 
 	if(MC_EdgeTable[cubeindex] & 8)
-		vertlist[3] = vertex_interp(isovalue, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
+		vertlist[3] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
 
 	if(MC_EdgeTable[cubeindex] & 16)
-		vertlist[4] = vertex_interp(isovalue, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
+		vertlist[4] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 32)
-		vertlist[5] = vertex_interp(isovalue, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
+		vertlist[5] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 64)
-		vertlist[6] = vertex_interp(isovalue, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
+		vertlist[6] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
 
 	if(MC_EdgeTable[cubeindex] & 128)
-		vertlist[7] = vertex_interp(isovalue, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
+		vertlist[7] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 256)
-		vertlist[8] = vertex_interp(isovalue, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
+		vertlist[8] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 512)
-		vertlist[9] = vertex_interp(isovalue, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
+		vertlist[9] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 1024)
-		vertlist[10] = vertex_interp(isovalue, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
+		vertlist[10] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 2048)
-		vertlist[11] = vertex_interp(isovalue, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
+		vertlist[11] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
 
 	short unsigned int ntriang = 0;
 
@@ -400,7 +414,7 @@ short unsigned int marching_cubes::tesselate_grid_cube(const float isovalue, con
 	return ntriang;
 }
 
-void marching_cubes::tesselate_adjacent_xy_plane_pair(size_t &box_count, const vector<float> &xyplane0, const vector<float> &xyplane1, const size_t z, vector<triangle> &triangles, const float isovalue, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
+void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, short unsigned int max_iterations, size_t &box_count, const vector<float> &xyplane0, const vector<float> &xyplane1, const size_t z, vector<triangle> &triangles, const float isovalue, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
 {
     const float x_step_size = (x_grid_max - x_grid_min) / (x_res - 1);
     const float y_step_size = (y_grid_max - y_grid_min) / (y_res - 1);
@@ -523,7 +537,7 @@ void marching_cubes::tesselate_adjacent_xy_plane_pair(size_t &box_count, const v
             // Generate triangles from cube.
             static triangle temp_triangle_array[5];
  
-            short unsigned int number_of_triangles_generated = tesselate_grid_cube(isovalue, temp_cube, temp_triangle_array);
+            short unsigned int number_of_triangles_generated = tesselate_grid_cube(C, z_w, max_iterations, isovalue, temp_cube, temp_triangle_array);
  
 			if (number_of_triangles_generated > 0)
 				box_count++;
@@ -534,3 +548,247 @@ void marching_cubes::tesselate_adjacent_xy_plane_pair(size_t &box_count, const v
     }
 }
 
+quintonion marching_cubes::sin(const quintonion& in)
+{
+	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
+
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	//	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	out.vertex_data[0] = std::sin(in.vertex_data[0]) * cosh(l_e);
+	out.vertex_data[1] = in.vertex_data[1] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[2] = in.vertex_data[2] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[3] = in.vertex_data[3] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+	out.vertex_data[4] = in.vertex_data[4] / l_e * cos(in.vertex_data[0]) * sinh(l_e);
+
+	return out;
+}
+
+quintonion marching_cubes::exp(const quintonion& in)
+{
+	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	if (in.vertex_data[0] != 0)
+	{
+		out.vertex_data[0] = std::exp(in.vertex_data[0]) * cos(l_e);
+	}
+
+	if (l_e != 0)
+	{
+		out.vertex_data[1] = in.vertex_data[1] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
+		out.vertex_data[2] = in.vertex_data[2] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
+		out.vertex_data[3] = in.vertex_data[3] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
+		out.vertex_data[4] = in.vertex_data[4] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
+	}
+
+	return out;
+}
+
+quintonion marching_cubes::ln(const quintonion& in)
+{
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4];
+
+	float l_d = sqrtf(d);
+	float l_e = sqrtf(e);
+
+	quintonion out;
+
+	if (in.vertex_data[0] != 0)
+	{
+		out.vertex_data[0] = log(l_d);
+	}
+
+	if (l_e != 0)
+	{
+		out.vertex_data[1] = in.vertex_data[1] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[2] = in.vertex_data[2] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[3] = in.vertex_data[3] / l_e * acos(in.vertex_data[0] / l_d);
+		out.vertex_data[4] = in.vertex_data[4] / l_e * acos(in.vertex_data[0] / l_d);
+	}
+
+	return out;
+}
+
+quaternion marching_cubes::traditional_mul(const quaternion& in_a, const quaternion& in_b)
+{
+	quaternion out;
+
+	// perform traditional multiply
+	out.x = in_a.x * in_b.x - in_a.y * in_b.y - in_a.z * in_b.z - in_a.w * in_b.w;
+	out.y = in_a.x * in_b.y + in_a.y * in_b.x + in_a.z * in_b.w - in_a.w * in_b.z;
+	out.z = in_a.x * in_b.z - in_a.y * in_b.w + in_a.z * in_b.x + in_a.w * in_b.y;
+	out.w = in_a.x * in_b.w + in_a.y * in_b.z - in_a.z * in_b.y + in_a.w * in_b.x;
+
+	return out;
+}
+
+quintonion marching_cubes::mul(const quintonion& in_a, const quintonion& in_b)
+{
+	// A*B == exp(ln(A) + ln(B))
+	quintonion ln_a = ln(in_a);
+	quintonion ln_b = ln(in_b);
+
+	quintonion out;
+
+	out.vertex_data[0] = ln_a.vertex_data[0] + ln_b.vertex_data[0];
+	out.vertex_data[1] = ln_a.vertex_data[1] + ln_b.vertex_data[1];
+	out.vertex_data[2] = ln_a.vertex_data[2] + ln_b.vertex_data[2];
+	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
+	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
+
+	return exp(out);
+}
+
+
+quintonion marching_cubes::conj_number_type(quintonion& in)
+{
+	quintonion out;
+
+	out.vertex_data[0] = in.vertex_data[0];
+
+	for (size_t i = 1; i < in.vertex_length; i++)
+		out.vertex_data[i] = -in.vertex_data[i];
+
+	return out;
+}
+
+quintonion marching_cubes::pow_number_type(quintonion& in, float exponent)
+{
+	const float beta = exponent;
+
+	float d = 0;
+	float e = 0;
+	quintonion out;
+
+	for (size_t i = 0; i < in.vertex_length; i++)
+		d += (in.vertex_data[i] * in.vertex_data[i]);
+
+	for (size_t i = 1; i < in.vertex_length; i++)
+		e += (in.vertex_data[i] * in.vertex_data[i]);
+
+	if (d == 0)
+	{
+		for (size_t i = 0; i < out.vertex_length; i++)
+			out.vertex_data[i] = 0;
+
+		return out;
+	}
+
+	const float l_d = sqrtf(d);
+	const float l_e = sqrtf(e);
+	const float d_b2 = powf(d, beta / 2.0f);
+
+	const float theta = beta * acos(in.vertex_data[0] / l_d);
+
+	out.vertex_data[0] = d_b2 * cos(theta);
+
+	if (e != 0)
+	{
+		for (size_t i = 1; i < out.vertex_length; i++)
+			out.vertex_data[i] = (in.vertex_data[i] / l_e) * d_b2 * std::sin(theta);
+	}
+
+	return out;
+}
+
+
+vertex_3 marching_cubes::vertex_interp_refine(
+	quintonion C,
+	float z_w,
+	short unsigned int max_iterations,
+	float isovalue,
+	vertex_3 v0, vertex_3 v1,
+	float val_v0, float val_v1)
+{
+	if (v1 < v0)
+	{
+		vertex_3 temp(v0);
+		float temp_val = val_v0;
+
+		v0 = v1;
+		val_v0 = val_v1;
+
+		v1 = temp;
+		val_v1 = temp_val;
+	}
+
+	// Start half-way between the vertices.
+	vertex_3 result = (v0 + v1) * 0.5f;
+
+	size_t vertex_refinement_steps = 8;
+	float threshold = isovalue;
+
+	// Refine the result, if need be.
+	if (0 < vertex_refinement_steps)
+	{
+		vertex_3 forward, backward;
+
+		// If p1 is outside of the surface and p2 is inside of the surface ...
+		if (val_v0 > val_v1)
+		{
+			forward = v0;
+			backward = v1;
+		}
+		else
+		{
+			forward = v1;
+			backward = v0;
+		}
+
+		for (size_t i = 0; i < vertex_refinement_steps; i++)
+		{
+			quintonion Z;
+			Z.vertex_data[0] = result.x;
+			Z.vertex_data[1] = result.y;
+			Z.vertex_data[2] = result.z;
+			Z.vertex_data[3] = z_w;
+			Z.vertex_data[4] = z_w;
+
+			// If point is in the quaternion Julia set, then move forward by 1/2 of a step, else move backward by 1/2 of a step ...
+			if (threshold > iterate(Z, C, max_iterations, threshold))
+			{
+				backward = result;
+				result += (forward - result) * 0.5f;
+			}
+			else
+			{
+				forward = result;
+				result += (backward - result) * 0.5f;
+			}
+		}
+	}
+
+	return result;
+}

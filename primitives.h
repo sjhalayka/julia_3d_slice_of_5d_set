@@ -148,6 +148,15 @@ public:
 		return temp;
 	}
 
+	inline vertex_3& operator+=(const vertex_3& right)
+	{
+		x += right.x;
+		y += right.y;
+		z += right.z;
+
+		return *this;
+	}
+
 	inline const vertex_3& operator*(const float& right) const
 	{
 		static vertex_3 temp;
