@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 #include "marching_cubes.h"

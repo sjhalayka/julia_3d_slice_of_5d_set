@@ -42,8 +42,8 @@ namespace marching_cubes
 	};
 
 	vertex_3 vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2);
-	short unsigned int tesselate_grid_cube(quintonion C, float z_w, short unsigned int max_iterations, const float isovalue, const grid_cube &grid, triangle *const triangles);
-	void tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, short unsigned int max_iterations, size_t &box_count, const vector<float> &xyplane0, const vector<float> &xyplane1, const size_t z, vector<triangle> &triangles, const float isovalue, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res);
+	short unsigned int tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube& grid, triangle* const triangles);
+	void tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle> &triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res);
 
 
 	quintonion sin(const quintonion& in);
@@ -74,18 +74,23 @@ namespace marching_cubes
 		{
 			quintonion Z_orig = Z;
 
-			//quintonion Z_base = Z;
+			quintonion Z_base = Z;
+			Z = mul(Z, Z_base);
 			//Z = mul(Z, Z_base);
 			//Z = mul(Z, Z_base);
-			//Z = mul(Z, Z_base);
-			//Z = Z + C;
 
-			// Z = pow_number_type(Z_orig, 4.0) + C;
-
-		//	Z = sin(Z) + mul(sin(Z), C);
+			Z = Z + C;
 
 
-			quaternion qc;
+		//	Z = pow_number_type(Z_orig, 2.0) + C;
+
+
+
+
+			//Z = sin(Z) + mul(sin(Z), C);
+
+
+	/*		quaternion qc;
 			qc.x = C.vertex_data[0];
 			qc.y = C.vertex_data[1];
 			qc.z = C.vertex_data[2];
@@ -99,7 +104,7 @@ namespace marching_cubes
 			qs.z = s.vertex_data[2];
 			qs.w = s.vertex_data[3];
 
-			quaternion f = traditional_mul(qs, qc);
+			quaternion f = traditional_mul(qc, qs);
 
 			f.x += qs.x;
 			f.y += qs.y;
@@ -110,7 +115,7 @@ namespace marching_cubes
 			Z.vertex_data[1] = f.y;
 			Z.vertex_data[2] = f.z;
 			Z.vertex_data[3] = f.w;
-			Z.vertex_data[4] = 0;
+			Z.vertex_data[4] = 0;*/
 
 
 			if (Z.magnitude() >= threshold)
@@ -123,8 +128,10 @@ namespace marching_cubes
 	vertex_3 vertex_interp_refine(
 		quintonion C,
 		float z_w,
-		short unsigned int max_iterations,
 		float isovalue,
+		float upper_threshold,
+		float lower_threshold,
+		short unsigned int max_iterations,
 		vertex_3 v0, vertex_3 v1,
 		float val_v0, float val_v1);
 

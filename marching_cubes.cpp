@@ -347,7 +347,7 @@ vertex_3 marching_cubes::vertex_interp(const float isovalue, vertex_3 p1, vertex
 
 
 
-short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, short unsigned int max_iterations, const float isovalue, const grid_cube &grid, triangle *const triangles)
+short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube &grid, triangle *const triangles)
 {
 	short unsigned int cubeindex = 0;
 
@@ -366,40 +366,40 @@ short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, 
 	vertex_3 vertlist[12];
 
 	if(MC_EdgeTable[cubeindex] & 1)
-		vertlist[0] = vertex_interp_refine(C, z_w,	max_iterations, isovalue, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
+		vertlist[0] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
 
 	if(MC_EdgeTable[cubeindex] & 2)
-		vertlist[1] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
+		vertlist[1] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
 
 	if(MC_EdgeTable[cubeindex] & 4)
-		vertlist[2] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
+		vertlist[2] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
 
 	if(MC_EdgeTable[cubeindex] & 8)
-		vertlist[3] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
+		vertlist[3] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
 
 	if(MC_EdgeTable[cubeindex] & 16)
-		vertlist[4] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
+		vertlist[4] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 32)
-		vertlist[5] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
+		vertlist[5] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 64)
-		vertlist[6] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
+		vertlist[6] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
 
 	if(MC_EdgeTable[cubeindex] & 128)
-		vertlist[7] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
+		vertlist[7] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 256)
-		vertlist[8] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
+		vertlist[8] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 512)
-		vertlist[9] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
+		vertlist[9] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 1024)
-		vertlist[10] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
+		vertlist[10] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 2048)
-		vertlist[11] = vertex_interp_refine(C, z_w, max_iterations, isovalue, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
+		vertlist[11] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
 
 	short unsigned int ntriang = 0;
 
@@ -414,8 +414,32 @@ short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, 
 	return ntriang;
 }
 
-void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, short unsigned int max_iterations, size_t &box_count, const vector<float> &xyplane0, const vector<float> &xyplane1, const size_t z, vector<triangle> &triangles, const float isovalue, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
+void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle>& triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
 {
+	float avg = (upper_threshold + lower_threshold) / 2.0f;
+
+	for (size_t i = 0; i < xyplane0.size(); i++)
+	{
+		float a = fabs(avg - xyplane0[i]);
+		float b = fabs(avg - upper_threshold);
+
+		float c = a / b;
+
+		xyplane0[i] = c * isovalue;
+	}
+
+	for (size_t i = 0; i < xyplane1.size(); i++)
+	{
+		float a = fabs(avg - xyplane1[i]);
+		float b = fabs(avg - upper_threshold);
+
+		float c = a / b;
+
+		xyplane1[i] = c * isovalue;
+
+	}
+
+
     const float x_step_size = (x_grid_max - x_grid_min) / (x_res - 1);
     const float y_step_size = (y_grid_max - y_grid_min) / (y_res - 1);
     const float z_step_size = (z_grid_max - z_grid_min) / (z_res - 1);
@@ -537,10 +561,7 @@ void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, s
             // Generate triangles from cube.
             static triangle temp_triangle_array[5];
  
-            short unsigned int number_of_triangles_generated = tesselate_grid_cube(C, z_w, max_iterations, isovalue, temp_cube, temp_triangle_array);
- 
-			if (number_of_triangles_generated > 0)
-				box_count++;
+            short unsigned int number_of_triangles_generated = tesselate_grid_cube(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, temp_cube, temp_triangle_array);
 
             for(short unsigned int i = 0; i < number_of_triangles_generated; i++)
                  triangles.push_back(temp_triangle_array[i]);
@@ -727,8 +748,10 @@ quintonion marching_cubes::pow_number_type(quintonion& in, float exponent)
 vertex_3 marching_cubes::vertex_interp_refine(
 	quintonion C,
 	float z_w,
-	short unsigned int max_iterations,
 	float isovalue,
+	float upper_threshold,
+	float lower_threshold,
+	short unsigned int max_iterations,
 	vertex_3 v0, vertex_3 v1,
 	float val_v0, float val_v1)
 {
@@ -747,8 +770,8 @@ vertex_3 marching_cubes::vertex_interp_refine(
 	// Start half-way between the vertices.
 	vertex_3 result = (v0 + v1) * 0.5f;
 
-	size_t vertex_refinement_steps = 8;
-	float threshold = isovalue;
+	const size_t vertex_refinement_steps = 8;
+	const float threshold = isovalue;
 
 	// Refine the result, if need be.
 	if (0 < vertex_refinement_steps)
@@ -776,8 +799,21 @@ vertex_3 marching_cubes::vertex_interp_refine(
 			Z.vertex_data[3] = z_w;
 			Z.vertex_data[4] = z_w;
 
-			// If point is in the quaternion Julia set, then move forward by 1/2 of a step, else move backward by 1/2 of a step ...
-			if (threshold > iterate(Z, C, max_iterations, threshold))
+
+			float x = iterate(Z, C, max_iterations, threshold);
+
+
+			float avg = (upper_threshold + lower_threshold) / 2.0f;
+
+				float a = fabs(avg - x);
+				float b = fabs(avg - upper_threshold);
+
+				float c = a / b;
+
+				x = c * threshold;
+
+			// If point is in the set, then move forward by 1/2 of a step, else move backward by 1/2 of a step ...
+			if (threshold > x)
 			{
 				backward = result;
 				result += (forward - result) * 0.5f;

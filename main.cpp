@@ -2,9 +2,29 @@
 
 int main(void)
 {
+	vector<pair<float, float>> thresholds;
+
+	vector<vector<triangle>> triangles;
+
+	pair<float, float> f;
+
+	f.first = 4.0f;
+	f.second = 1.05f;
+	thresholds.push_back(f);
+
+	f.first = 1.0f;
+	f.second = 0.55f;
+	thresholds.push_back(f);
+
+	f.first = 0.5f;
+	f.second = 0.0f;
+	thresholds.push_back(f);
+
+	triangles.resize(thresholds.size());
+
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 100;
+	const size_t res = 1000;
 
 	const bool make_border = true;
 
@@ -14,7 +34,7 @@ int main(void)
 	// When adding a border, use a value that is "much" greater than the threshold.
 	const float border_value = 1.0f + threshold;
 
-	vector<triangle> triangles;
+
 	vector<float> xyplane0(res * res, 0);
 	vector<float> xyplane1(res * res, 0);
 
@@ -25,7 +45,7 @@ int main(void)
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
 	C.vertex_data[3] = 0.2f;
-	C.vertex_data[4] = 0.0f;
+	C.vertex_data[4] = 0.1f;
 
 	quintonion Z;
 
@@ -46,9 +66,12 @@ int main(void)
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
 			if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
-				xyplane0[x*res + y] = border_value;
+				xyplane0[x * res + y] = border_value;
 			else
 				xyplane0[x * res + y] = iterate(Z, C, max_iterations, threshold);
+
+			if (z > res / 2)
+				xyplane0[x * res + y] = border_value;
 		}
 	}
 
@@ -70,34 +93,48 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
-					xyplane1[x*res + y] = border_value;
+					xyplane1[x * res + y] = border_value;
 				else
 					xyplane1[x * res + y] = iterate(Z, C, max_iterations, threshold);
+
+				if (z > res / 2)
+					xyplane1[x * res + y] = border_value;
 			}
 		}
 
-		size_t box_count = 0;
 
-		// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
-		tesselate_adjacent_xy_plane_pair(
-			C, 0.0f, max_iterations,
-			box_count,
-			xyplane0, xyplane1,
-			z - 1,
-			triangles,
-			threshold, // Use threshold as isovalue.
-			grid_min, grid_max, res,
-			grid_min, grid_max, res,
-			grid_min, grid_max, res);
+
+		for (size_t t = 0; t < thresholds.size(); t++)
+		{
+			// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
+			tesselate_adjacent_xy_plane_pair(
+				C, 0.0f,
+				threshold,
+				thresholds[t].first,
+				thresholds[t].second,
+				max_iterations,
+				xyplane0, xyplane1,
+				z - 1,
+				triangles[t],
+				grid_min, grid_max, res,
+				grid_min, grid_max, res,
+				grid_min, grid_max, res);
+		}
 
 		// Swap memory pointers (fast) instead of performing a memory copy (slow)
 		xyplane1.swap(xyplane0);
 	}
 
-	cout << endl;
+	for (size_t t = 0; t < triangles.size(); t++)
+	{
+		ostringstream oss;
+		oss << t;
 
-	if (0 < triangles.size())
-		write_triangles_to_binary_stereo_lithography_file(triangles, "out.stl");
+		string filename = "out" + oss.str() + ".stl";
+
+		if (0 < triangles[t].size())
+			write_triangles_to_binary_stereo_lithography_file(triangles[t], filename.c_str());
+	}
 
 	return 0;
 }
