@@ -9,10 +9,10 @@ int main(void)
 	pair<float, float> f;
 
 	f.first = 4.0f;
-	f.second = 1.05f;
+	f.second = 2.0f;
 	thresholds.push_back(f);
 
-	f.first = 1.0f;
+	f.first = 1.95f;
 	f.second = 0.55f;
 	thresholds.push_back(f);
 
@@ -24,7 +24,7 @@ int main(void)
 
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 1000;
+	const size_t res = 100;
 
 	const bool make_border = true;
 
@@ -65,13 +65,16 @@ int main(void)
 
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
-			if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
-				xyplane0[x * res + y] = border_value;
-			else
-				xyplane0[x * res + y] = iterate(Z, C, max_iterations, threshold);
 
 			if (z > res / 2)
 				xyplane0[x * res + y] = border_value;
+			else
+			{
+				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
+					xyplane0[x * res + y] = border_value;
+				else
+					xyplane0[x * res + y] = iterate(Z, C, max_iterations, threshold);
+			}
 		}
 	}
 
@@ -92,13 +95,16 @@ int main(void)
 
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
-				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
-					xyplane1[x * res + y] = border_value;
-				else
-					xyplane1[x * res + y] = iterate(Z, C, max_iterations, threshold);
 
 				if (z > res / 2)
 					xyplane1[x * res + y] = border_value;
+				else
+				{
+					if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
+						xyplane1[x * res + y] = border_value;
+					else
+						xyplane1[x * res + y] = iterate(Z, C, max_iterations, threshold);
+				}
 			}
 		}
 

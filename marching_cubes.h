@@ -72,14 +72,14 @@ namespace marching_cubes
 	{
 		for (short unsigned int i = 0; i < max_iterations; i++)
 		{
-			quintonion Z_orig = Z;
+			//quintonion Z_orig = Z;
 
-			quintonion Z_base = Z;
-			Z = mul(Z, Z_base);
+			//quintonion Z_base = Z;
 			//Z = mul(Z, Z_base);
 			//Z = mul(Z, Z_base);
+			//Z = mul(Z, Z_base);
 
-			Z = Z + C;
+			//Z = Z + C;
 
 
 		//	Z = pow_number_type(Z_orig, 2.0) + C;
@@ -87,7 +87,7 @@ namespace marching_cubes
 
 
 
-			//Z = sin(Z) + mul(sin(Z), C);
+			Z = sin(Z) + mul(sin(Z), C);
 
 
 	/*		quaternion qc;
