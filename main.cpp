@@ -59,7 +59,7 @@ int main(void)
 	// Do slice of 5D set
 
 	// range from 0 to 0.6 or so
-	float slice_val = 0.6f;
+	float slice_val = 0.45f;
 
 
 	size_t z = 0;
