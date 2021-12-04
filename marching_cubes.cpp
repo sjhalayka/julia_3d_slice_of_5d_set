@@ -301,37 +301,37 @@ namespace marching_cubes
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
 
 };
-
-vertex_3 marching_cubes::vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2)
-{
-	// Sort the vertices so that cracks don't mess up the water-tightness of the mesh.
-	// Note: the cracks don't appear if you use doubles instead of floats.
-	if (p2 < p1)
-	{
-		vertex_3 tempv = p2;
-		p2 = p1;
-		p1 = tempv;
-
-		float tempf = valp2;
-		valp2 = valp1;
-		valp1 = tempf;
-	}
-
-	const float epsilon = 1e-10f;
-
-	if(fabs(isovalue - valp1) < epsilon)
-		return(p1);
-
-	if(fabs(isovalue - valp2) < epsilon)
-		return(p2);
-
-	if(fabs(valp1 - valp2) < epsilon)
-		return(p1);
-
-	float mu = (isovalue - valp1) / (valp2 - valp1);
-
-	return p1 + (p2 - p1)*mu;
-}
+//
+//vertex_3 marching_cubes::vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2)
+//{
+//	// Sort the vertices so that cracks don't mess up the water-tightness of the mesh.
+//	// Note: the cracks don't appear if you use doubles instead of floats.
+//	if (p2 < p1)
+//	{
+//		vertex_3 tempv = p2;
+//		p2 = p1;
+//		p1 = tempv;
+//
+//		float tempf = valp2;
+//		valp2 = valp1;
+//		valp1 = tempf;
+//	}
+//
+//	const float epsilon = 1e-10f;
+//
+//	if(fabs(isovalue - valp1) < epsilon)
+//		return(p1);
+//
+//	if(fabs(isovalue - valp2) < epsilon)
+//		return(p2);
+//
+//	if(fabs(valp1 - valp2) < epsilon)
+//		return(p1);
+//
+//	float mu = (isovalue - valp1) / (valp2 - valp1);
+//
+//	return p1 + (p2 - p1)*mu;
+//}
 
 
 
@@ -349,6 +349,8 @@ vertex_3 marching_cubes::vertex_interp(const float isovalue, vertex_3 p1, vertex
 
 short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube &grid, triangle *const triangles)
 {
+
+
 	short unsigned int cubeindex = 0;
 
 	if(grid.value[0] < isovalue) cubeindex |= 1;
@@ -416,6 +418,8 @@ short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, 
 
 void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle>& triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
 {
+
+
 	float avg = (upper_threshold + lower_threshold) / 2.0f;
 
 	for (size_t i = 0; i < xyplane0.size(); i++)
@@ -612,10 +616,10 @@ quintonion marching_cubes::exp(const quintonion& in)
 
 	quintonion out;
 
-	if (in.vertex_data[0] != 0)
-	{
+//	if (in.vertex_data[0] != 0)
+//	{
 		out.vertex_data[0] = std::exp(in.vertex_data[0]) * cos(l_e);
-	}
+//	}
 
 	if (l_e != 0)
 	{
@@ -774,7 +778,7 @@ vertex_3 marching_cubes::vertex_interp_refine(
 	const float threshold = isovalue;
 
 	// Refine the result, if need be.
-	if (0 < vertex_refinement_steps)
+	if (1)//0 < vertex_refinement_steps)
 	{
 		vertex_3 forward, backward;
 
@@ -790,17 +794,20 @@ vertex_3 marching_cubes::vertex_interp_refine(
 			backward = v0;
 		}
 
-		for (size_t i = 0; i < vertex_refinement_steps; i++)
+		for (size_t k = 0; k < vertex_refinement_steps; k++)
 		{
 			quintonion Z;
 			Z.vertex_data[0] = result.x;
 			Z.vertex_data[1] = result.y;
 			Z.vertex_data[2] = result.z;
-			Z.vertex_data[3] = z_w;
-			Z.vertex_data[4] = z_w;
 
 
-			float x = iterate(Z, C, max_iterations, threshold);
+
+
+
+
+
+			float x = iterate(Z, C, z_w, max_iterations, threshold);
 
 
 			float avg = (upper_threshold + lower_threshold) / 2.0f;

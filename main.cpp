@@ -1,5 +1,9 @@
 #include "main.h"
 
+
+
+
+
 int main(void)
 {
 	vector<pair<float, float>> thresholds;
@@ -9,16 +13,16 @@ int main(void)
 	pair<float, float> f;
 
 	f.first = 4.0f;
-	f.second = 2.0f;
-	thresholds.push_back(f);
-
-	f.first = 1.95f;
-	f.second = 0.55f;
-	thresholds.push_back(f);
-
-	f.first = 0.5f;
 	f.second = 0.0f;
 	thresholds.push_back(f);
+
+	//f.first = 1.95f;
+	//f.second = 0.55f;
+	//thresholds.push_back(f);
+
+	//f.first = 0.5f;
+	//f.second = 0.0f;
+	//thresholds.push_back(f);
 
 	triangles.resize(thresholds.size());
 
@@ -53,8 +57,10 @@ int main(void)
 		Z.vertex_data[i] = grid_min;
 
 	// Do slice of 5D set
-	Z.vertex_data[3] = 0.0f;
-	Z.vertex_data[4] = 0.0f;
+
+	// range from 0 to 0.6 or so
+	float slice_val = 0.6f;
+
 
 	size_t z = 0;
 
@@ -66,14 +72,14 @@ int main(void)
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
 
-			if (z > res / 2)
+			if (0)//z > res / 2)
 				xyplane0[x * res + y] = border_value;
 			else
 			{
 				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 					xyplane0[x * res + y] = border_value;
 				else
-					xyplane0[x * res + y] = iterate(Z, C, max_iterations, threshold);
+					xyplane0[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
 			}
 		}
 	}
@@ -96,14 +102,14 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 
-				if (z > res / 2)
+				if (0)//z > res / 2)
 					xyplane1[x * res + y] = border_value;
 				else
 				{
 					if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 						xyplane1[x * res + y] = border_value;
 					else
-						xyplane1[x * res + y] = iterate(Z, C, max_iterations, threshold);
+						xyplane1[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
 				}
 			}
 		}
@@ -114,7 +120,7 @@ int main(void)
 		{
 			// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
 			tesselate_adjacent_xy_plane_pair(
-				C, 0.0f,
+				C, slice_val,
 				threshold,
 				thresholds[t].first,
 				thresholds[t].second,

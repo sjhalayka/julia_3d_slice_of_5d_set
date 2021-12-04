@@ -41,7 +41,7 @@ namespace marching_cubes
 		float value[8];
 	};
 
-	vertex_3 vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2);
+//	vertex_3 vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2);
 	short unsigned int tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube& grid, triangle* const triangles);
 	void tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle> &triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res);
 
@@ -67,19 +67,23 @@ namespace marching_cubes
 	inline float iterate(
 		quintonion Z,
 		quintonion C,
+		float z_w,
 		const short unsigned int max_iterations,
 		const float threshold)
 	{
+		Z.vertex_data[3] = z_w;
+		Z.vertex_data[4] = z_w;
+
 		for (short unsigned int i = 0; i < max_iterations; i++)
 		{
 			//quintonion Z_orig = Z;
 
-			//quintonion Z_base = Z;
-			//Z = mul(Z, Z_base);
-			//Z = mul(Z, Z_base);
-			//Z = mul(Z, Z_base);
+			quintonion Z_base = Z;
+			Z = mul(Z, Z_base);
+			Z = mul(Z, Z_base);
+			Z = mul(Z, Z_base);
 
-			//Z = Z + C;
+			Z = Z + C;
 
 
 		//	Z = pow_number_type(Z_orig, 2.0) + C;
@@ -87,7 +91,7 @@ namespace marching_cubes
 
 
 
-			Z = sin(Z) + mul(sin(Z), C);
+		//	Z = sin(Z) + mul(sin(Z), C);
 
 
 	/*		quaternion qc;
