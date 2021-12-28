@@ -80,8 +80,8 @@ namespace marching_cubes
 
 			quintonion Z_base = Z;
 			Z = mul(Z, Z_base);
-			Z = mul(Z, Z_base);
-			Z = mul(Z, Z_base);
+			//Z = mul(Z, Z_base);
+			//Z = mul(Z, Z_base);
 
 			Z = Z + C;
 

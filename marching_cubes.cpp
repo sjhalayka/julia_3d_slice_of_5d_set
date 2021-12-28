@@ -611,22 +611,23 @@ quintonion marching_cubes::exp(const quintonion& in)
 		in.vertex_data[3] * in.vertex_data[3] +
 		in.vertex_data[4] * in.vertex_data[4];
 
-	float l_d = sqrtf(d);
-	float l_e = sqrtf(e);
+	float l_d = std::sqrtf(d);
+	float l_e = std::sqrtf(e);
 
 	quintonion out;
 
-//	if (in.vertex_data[0] != 0)
-//	{
-		out.vertex_data[0] = std::exp(in.vertex_data[0]) * cos(l_e);
-//	}
+	const float exp_in = std::exp(in.vertex_data[0]);
+
+	out.vertex_data[0] = exp_in * std::cos(l_e);
 
 	if (l_e != 0)
 	{
-		out.vertex_data[1] = in.vertex_data[1] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
-		out.vertex_data[2] = in.vertex_data[2] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
-		out.vertex_data[3] = in.vertex_data[3] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
-		out.vertex_data[4] = in.vertex_data[4] / l_e * std::exp(in.vertex_data[0]) * std::sin(l_e);
+		float sin_l_e = std::sin(l_e);
+
+		out.vertex_data[1] = in.vertex_data[1] / l_e * exp_in * sin_l_e;
+		out.vertex_data[2] = in.vertex_data[2] / l_e * exp_in * sin_l_e;
+		out.vertex_data[3] = in.vertex_data[3] / l_e * exp_in * sin_l_e;
+		out.vertex_data[4] = in.vertex_data[4] / l_e * exp_in * sin_l_e;
 	}
 
 	return out;
@@ -645,22 +646,24 @@ quintonion marching_cubes::ln(const quintonion& in)
 		in.vertex_data[3] * in.vertex_data[3] +
 		in.vertex_data[4] * in.vertex_data[4];
 
-	float l_d = sqrtf(d);
-	float l_e = sqrtf(e);
+	float l_d = std::sqrtf(d);
+	float l_e = std::sqrtf(e);
 
 	quintonion out;
 
 	if (in.vertex_data[0] != 0)
 	{
-		out.vertex_data[0] = log(l_d);
+		out.vertex_data[0] = std::log(l_d);
 	}
 
 	if (l_e != 0)
 	{
-		out.vertex_data[1] = in.vertex_data[1] / l_e * acos(in.vertex_data[0] / l_d);
-		out.vertex_data[2] = in.vertex_data[2] / l_e * acos(in.vertex_data[0] / l_d);
-		out.vertex_data[3] = in.vertex_data[3] / l_e * acos(in.vertex_data[0] / l_d);
-		out.vertex_data[4] = in.vertex_data[4] / l_e * acos(in.vertex_data[0] / l_d);
+		const float acos_in = std::acos(in.vertex_data[0] / l_d);
+
+		out.vertex_data[1] = in.vertex_data[1] / l_e * acos_in;
+		out.vertex_data[2] = in.vertex_data[2] / l_e * acos_in;
+		out.vertex_data[3] = in.vertex_data[3] / l_e * acos_in;
+		out.vertex_data[4] = in.vertex_data[4] / l_e * acos_in;
 	}
 
 	return out;
