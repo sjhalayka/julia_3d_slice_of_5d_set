@@ -13,22 +13,22 @@ int main(void)
 	pair<float, float> f;
 
 	f.first = 4.0f;
-	f.second = 1.0f;
-	thresholds.push_back(f);
-
-	f.first = 0.95f;
-	f.second = 0.55f;
-	thresholds.push_back(f);
-
-	f.first = 0.5f;
 	f.second = 0.0f;
 	thresholds.push_back(f);
+
+	//f.first = 0.95f;
+	//f.second = 0.55f;
+	//thresholds.push_back(f);
+
+	//f.first = 0.5f;
+	//f.second = 0.0f;
+	//thresholds.push_back(f);
 
 	triangles.resize(thresholds.size());
 
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 300;
+	const size_t res = 100;
 
 	const bool make_border = true;
 
@@ -59,7 +59,7 @@ int main(void)
 	// Do slice of 5D set
 
 	// range from 0 to 0.6 or so
-	float slice_val = 0.45f;
+	float slice_val = 0.0f;
 
 
 	size_t z = 0;
@@ -72,7 +72,7 @@ int main(void)
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
 
-			if (z > res / 2)
+			if (0)//z > res / 2)
 				xyplane0[x * res + y] = border_value;
 			else
 			{
@@ -102,7 +102,7 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 
-				if (z > res / 2)
+				if (0)//z > res / 2)
 					xyplane1[x * res + y] = border_value;
 				else
 				{
