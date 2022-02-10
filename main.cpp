@@ -6,6 +6,53 @@
 
 int main(void)
 {
+	//complex<float> a(1, 2);
+	//complex<float> b(11, 21);
+
+	//complex<float> x = log(b) / log(a);
+
+	//complex<float> y = pow(a, x);
+
+	//cout << y.real() << " " << y.imag() << endl;
+
+	//return 0;
+
+
+	//quintonion a;
+	//a.vertex_data[0] = 1;
+	//a.vertex_data[1] = 2;
+	//a.vertex_data[2] = 3;
+	//a.vertex_data[3] = 4;
+	//a.vertex_data[4] = 5;
+
+	//quintonion b;
+	//b.vertex_data[0] = 11;
+	//b.vertex_data[1] = 21;
+	//b.vertex_data[2] = 31;
+	//b.vertex_data[3] = 41;
+	//b.vertex_data[4] = 51;
+
+	//quintonion x = div(ln(b), ln(a));
+
+	//for (size_t i = 0; i < x.vertex_length; i++)
+	//	cout << x.vertex_data[i] << ' ';
+
+	//cout << endl;
+
+	//quintonion y = pow_number_type(a, x);
+
+	//for (size_t i = 0; i < y.vertex_length; i++)
+	//	cout << y.vertex_data[i] << ' ';
+
+	//cout << endl;
+
+
+	//return 0;
+
+
+
+
+
 	vector<pair<float, float>> thresholds;
 
 	vector<vector<triangle>> triangles;
@@ -16,11 +63,11 @@ int main(void)
 	f.second = 0.0f;
 	thresholds.push_back(f);
 
-	//f.first = 0.95f;
-	//f.second = 0.55f;
+	//f.first = 2.0f;
+	//f.second = 1.55f;
 	//thresholds.push_back(f);
 
-	//f.first = 0.5f;
+	//f.first = 1.5f;
 	//f.second = 0.0f;
 	//thresholds.push_back(f);
 
@@ -28,7 +75,7 @@ int main(void)
 
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 100;
+	const size_t res = 50;
 
 	const bool make_border = true;
 
@@ -72,7 +119,7 @@ int main(void)
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
 
-			if (0)//z > res / 2)
+			if (z > res / 2)
 				xyplane0[x * res + y] = border_value;
 			else
 			{
@@ -102,7 +149,7 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 
-				if (0)//z > res / 2)
+				if (z > res / 2)
 					xyplane1[x * res + y] = border_value;
 				else
 				{

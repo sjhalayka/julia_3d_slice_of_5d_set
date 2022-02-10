@@ -63,6 +63,17 @@ public:
 		return out;
 	}
 
+	quintonion operator*(const float rhs) const
+	{
+		quintonion out;
+
+		for (size_t i = 0; i < vertex_length; i++)
+			out.vertex_data[i] = vertex_data[i] * rhs;
+
+		return out;
+	}
+
+
 	quintonion operator/(const float& right) const
 	{
 		quintonion out;

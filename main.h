@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <complex>
 using namespace std;
 
 #include "marching_cubes.h"

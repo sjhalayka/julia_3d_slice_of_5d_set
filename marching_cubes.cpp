@@ -682,11 +682,59 @@ quaternion marching_cubes::traditional_mul(const quaternion& in_a, const quatern
 	return out;
 }
 
+//quintonion marching_cubes::div(const quintonion& in_a, const quintonion& in_b)
+//{
+//	quintonion ln_a = ln(in_a);
+//	quintonion ln_b = ln(in_b);
+//
+//	quintonion out;
+//
+//	out.vertex_data[0] = ln_a.vertex_data[0] - ln_b.vertex_data[0];
+//	out.vertex_data[1] = ln_a.vertex_data[1] - ln_b.vertex_data[1];
+//	out.vertex_data[2] = ln_a.vertex_data[2] - ln_b.vertex_data[2];
+//	out.vertex_data[3] = ln_a.vertex_data[3] - ln_b.vertex_data[3];
+//	out.vertex_data[4] = ln_a.vertex_data[4] - ln_b.vertex_data[4];
+//
+//	quintonion o = exp(out);
+//	return o;
+//}
+
+
+
+quintonion marching_cubes::div(const quintonion& in_a, const quintonion& in_b)
+{
+	// c = a/b
+
+	// c = inv(b) * a
+	// inv(b) = conjugate(b) / norm(b)
+	// c = (conjugate(b) / norm(b)) * a
+
+	float b_norm = in_b.vertex_data[0] * in_b.vertex_data[0] +
+		in_b.vertex_data[1] * in_b.vertex_data[1] +
+		in_b.vertex_data[2] * in_b.vertex_data[2] +
+		in_b.vertex_data[3] * in_b.vertex_data[3] +
+		in_b.vertex_data[4] * in_b.vertex_data[4];
+
+	quintonion temp_b;
+	temp_b.vertex_data[0] =  in_b.vertex_data[0] / b_norm;
+	temp_b.vertex_data[1] = -in_b.vertex_data[1] / b_norm;
+	temp_b.vertex_data[2] = -in_b.vertex_data[2] / b_norm;
+	temp_b.vertex_data[3] = -in_b.vertex_data[3] / b_norm;
+	temp_b.vertex_data[4] = -in_b.vertex_data[4] / b_norm;
+
+	quintonion out = mul(temp_b, in_a);
+	return out;
+}
+
 quintonion marching_cubes::mul(const quintonion& in_a, const quintonion& in_b)
 {
 	// A*B == exp(ln(A) + ln(B))
-	quintonion ln_a = ln(in_a);
-	quintonion ln_b = ln(in_b);
+
+	quintonion a = in_a;
+	quintonion b = in_b;
+
+	quintonion ln_a = ln(a);
+	quintonion ln_b = ln(b);
 
 	quintonion out;
 
@@ -696,7 +744,8 @@ quintonion marching_cubes::mul(const quintonion& in_a, const quintonion& in_b)
 	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
 	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
 
-	return exp(out);
+	quintonion o = exp(out);
+	return o;
 }
 
 
@@ -712,8 +761,22 @@ quintonion marching_cubes::conj_number_type(quintonion& in)
 	return out;
 }
 
+
+quintonion marching_cubes::pow_number_type(quintonion& in, quintonion& exponent)
+{
+	return exp(mul(ln(in), exponent));
+}
+
+
+
+
+
 quintonion marching_cubes::pow_number_type(quintonion& in, float exponent)
 {
+	//return exp(ln(in) * exponent);
+
+
+
 	const float beta = exponent;
 
 	float d = 0;
@@ -781,7 +844,7 @@ vertex_3 marching_cubes::vertex_interp_refine(
 	const float threshold = isovalue;
 
 	// Refine the result, if need be.
-	if (1)//0 < vertex_refinement_steps)
+	if (0 < vertex_refinement_steps)
 	{
 		vertex_3 forward, backward;
 

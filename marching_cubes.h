@@ -55,13 +55,14 @@ namespace marching_cubes
 	quaternion traditional_mul(const quaternion& in_a, const quaternion& in_b);
 
 	quintonion mul(const quintonion& in_a, const quintonion& in_b);
+	quintonion div(const quintonion& in_a, const quintonion& in_b);
 
 
 	quintonion conj_number_type(quintonion& in);
 
 	quintonion pow_number_type(quintonion& in, float exponent);
 
-
+	quintonion pow_number_type(quintonion& in, quintonion& exponent);
 
 
 	inline float iterate(
@@ -76,25 +77,41 @@ namespace marching_cubes
 
 		for (short unsigned int i = 0; i < max_iterations; i++)
 		{
-			//quintonion Z_orig = Z;
 
 			quintonion Z_base = Z;
-			Z = mul(Z, Z_base);
-			Z = mul(Z, Z_base);
-			Z = mul(Z, Z_base);
 
-			Z = Z + C;
+	//		Z = mul(Z_base, Z);
+	//		Z = mul(Z_base, Z);
+	//////		Z = mul(Z, Z_base);
+	//		Z = Z + C;
 
+			//
 
-		//	Z = pow_number_type(Z_orig, 2.0) + C;
-
-
-
-
-		//	Z = sin(Z) + mul(sin(Z), C);
+			//cout << Z_base.magnitude() << endl;
 
 
-	/*		quaternion qc;
+
+//			 Z = pow_number_type(Z_base, 3.0);
+	//		 Z = Z + C
+
+
+
+			//cout << Z.magnitude() << endl;
+
+			//cout << Z_base.vertex_data[0] << " " << Z_base.vertex_data[1] << " " << Z_base.vertex_data[2] << " " << Z_base.vertex_data[3] << " " << Z_base.vertex_data[4] << endl;
+			//cout << Z.vertex_data[0] << " " << Z.vertex_data[1] << " " << Z.vertex_data[2] << " " << Z.vertex_data[3] << " " << Z.vertex_data[4] << endl;
+
+			//if (Z_base_normalized == Z_normalized)
+			//	cout << "equal" << endl;
+			//else
+			//	cout << "not equal" << endl;
+
+
+
+			Z = sin(Z) + mul(sin(Z), C);
+
+/*
+			quaternion qc;
 			qc.x = C.vertex_data[0];
 			qc.y = C.vertex_data[1];
 			qc.z = C.vertex_data[2];
@@ -119,8 +136,8 @@ namespace marching_cubes
 			Z.vertex_data[1] = f.y;
 			Z.vertex_data[2] = f.z;
 			Z.vertex_data[3] = f.w;
-			Z.vertex_data[4] = 0;*/
-
+			Z.vertex_data[4] = 0;
+*/
 
 			if (Z.magnitude() >= threshold)
 				break;
