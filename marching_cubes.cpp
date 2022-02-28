@@ -347,7 +347,7 @@ namespace marching_cubes
 
 
 
-short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube &grid, triangle *const triangles)
+short unsigned int marching_cubes::tesselate_grid_cube(vector<trajectory>& trajectory_data, quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube &grid, triangle *const triangles)
 {
 
 
@@ -368,40 +368,40 @@ short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, 
 	vertex_3 vertlist[12];
 
 	if(MC_EdgeTable[cubeindex] & 1)
-		vertlist[0] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
+		vertlist[0] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[1], grid.value[0], grid.value[1]);
 
 	if(MC_EdgeTable[cubeindex] & 2)
-		vertlist[1] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
+		vertlist[1] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[2], grid.value[1], grid.value[2]);
 
 	if(MC_EdgeTable[cubeindex] & 4)
-		vertlist[2] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
+		vertlist[2] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[3], grid.value[2], grid.value[3]);
 
 	if(MC_EdgeTable[cubeindex] & 8)
-		vertlist[3] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
+		vertlist[3] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[0], grid.value[3], grid.value[0]);
 
 	if(MC_EdgeTable[cubeindex] & 16)
-		vertlist[4] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
+		vertlist[4] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[4], grid.vertex[5], grid.value[4], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 32)
-		vertlist[5] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
+		vertlist[5] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[5], grid.vertex[6], grid.value[5], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 64)
-		vertlist[6] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
+		vertlist[6] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[6], grid.vertex[7], grid.value[6], grid.value[7]);
 
 	if(MC_EdgeTable[cubeindex] & 128)
-		vertlist[7] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
+		vertlist[7] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[7], grid.vertex[4], grid.value[7], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 256)
-		vertlist[8] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
+		vertlist[8] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[0], grid.vertex[4], grid.value[0], grid.value[4]);
 
 	if(MC_EdgeTable[cubeindex] & 512)
-		vertlist[9] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
+		vertlist[9] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[1], grid.vertex[5], grid.value[1], grid.value[5]);
 
 	if(MC_EdgeTable[cubeindex] & 1024)
-		vertlist[10] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
+		vertlist[10] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[2], grid.vertex[6], grid.value[2], grid.value[6]);
 
 	if(MC_EdgeTable[cubeindex] & 2048)
-		vertlist[11] = vertex_interp_refine(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
+		vertlist[11] = vertex_interp_refine(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, grid.vertex[3], grid.vertex[7], grid.value[3], grid.value[7]);
 
 	short unsigned int ntriang = 0;
 
@@ -416,7 +416,7 @@ short unsigned int marching_cubes::tesselate_grid_cube(quintonion C, float z_w, 
 	return ntriang;
 }
 
-void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle>& triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
+void marching_cubes::tesselate_adjacent_xy_plane_pair(vector<trajectory>& trajectory_data, quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle>& triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res)
 {
 
 
@@ -565,7 +565,7 @@ void marching_cubes::tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, c
             // Generate triangles from cube.
             static triangle temp_triangle_array[5];
  
-            short unsigned int number_of_triangles_generated = tesselate_grid_cube(C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, temp_cube, temp_triangle_array);
+            short unsigned int number_of_triangles_generated = tesselate_grid_cube(trajectory_data, C, z_w, isovalue, upper_threshold, lower_threshold, max_iterations, temp_cube, temp_triangle_array);
 
             for(short unsigned int i = 0; i < number_of_triangles_generated; i++)
                  triangles.push_back(temp_triangle_array[i]);
@@ -633,6 +633,54 @@ quintonion marching_cubes::exp(const quintonion& in)
 	return out;
 }
 
+
+octonion marching_cubes::exp(const octonion& in)
+{
+	//	float d = in.x * in.x + in.y * in.y + in.z * in.z + in.w * in.w;
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4] +
+		in.vertex_data[5] * in.vertex_data[5] +
+		in.vertex_data[6] * in.vertex_data[6] + 
+		in.vertex_data[7] * in.vertex_data[7];
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4] +
+		in.vertex_data[5] * in.vertex_data[5] +
+		in.vertex_data[6] * in.vertex_data[6] +
+		in.vertex_data[7] * in.vertex_data[7];
+
+	float l_d = std::sqrtf(d);
+	float l_e = std::sqrtf(e);
+
+	octonion out;
+
+	const float exp_in = std::exp(in.vertex_data[0]);
+
+	out.vertex_data[0] = exp_in * std::cos(l_e);
+
+	if (l_e != 0)
+	{
+		float sin_l_e = std::sin(l_e);
+
+		out.vertex_data[1] = in.vertex_data[1] / l_e * exp_in * sin_l_e;
+		out.vertex_data[2] = in.vertex_data[2] / l_e * exp_in * sin_l_e;
+		out.vertex_data[3] = in.vertex_data[3] / l_e * exp_in * sin_l_e;
+		out.vertex_data[4] = in.vertex_data[4] / l_e * exp_in * sin_l_e;
+		out.vertex_data[5] = in.vertex_data[5] / l_e * exp_in * sin_l_e;
+		out.vertex_data[6] = in.vertex_data[6] / l_e * exp_in * sin_l_e;
+		out.vertex_data[7] = in.vertex_data[7] / l_e * exp_in * sin_l_e;
+	}
+
+	return out;
+}
+
+
+
 quintonion marching_cubes::ln(const quintonion& in)
 {
 	float d = in.vertex_data[0] * in.vertex_data[0] +
@@ -651,7 +699,7 @@ quintonion marching_cubes::ln(const quintonion& in)
 
 	quintonion out;
 
-	if (in.vertex_data[0] != 0)
+	if (l_d != 0)
 	{
 		out.vertex_data[0] = std::log(l_d);
 	}
@@ -665,6 +713,73 @@ quintonion marching_cubes::ln(const quintonion& in)
 		out.vertex_data[3] = in.vertex_data[3] / l_e * acos_in;
 		out.vertex_data[4] = in.vertex_data[4] / l_e * acos_in;
 	}
+
+	return out;
+}
+
+
+
+octonion marching_cubes::ln(const octonion& in)
+{
+	float d = in.vertex_data[0] * in.vertex_data[0] +
+		in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4] +
+		in.vertex_data[5] * in.vertex_data[5] +
+		in.vertex_data[6] * in.vertex_data[6] +
+		in.vertex_data[7] * in.vertex_data[7];
+
+	float e = in.vertex_data[1] * in.vertex_data[1] +
+		in.vertex_data[2] * in.vertex_data[2] +
+		in.vertex_data[3] * in.vertex_data[3] +
+		in.vertex_data[4] * in.vertex_data[4] +
+		in.vertex_data[5] * in.vertex_data[5] +
+		in.vertex_data[6] * in.vertex_data[6] +
+		in.vertex_data[7] * in.vertex_data[7];
+
+	float l_d = std::sqrtf(d);
+	float l_e = std::sqrtf(e);
+
+	octonion out;
+
+	if (l_d != 0)
+	{
+		out.vertex_data[0] = std::log(l_d);
+	}
+
+	if (l_e != 0)
+	{
+		const float acos_in = std::acos(in.vertex_data[0] / l_d);
+
+		out.vertex_data[1] = in.vertex_data[1] / l_e * acos_in;
+		out.vertex_data[2] = in.vertex_data[2] / l_e * acos_in;
+		out.vertex_data[3] = in.vertex_data[3] / l_e * acos_in;
+		out.vertex_data[4] = in.vertex_data[4] / l_e * acos_in;
+		out.vertex_data[5] = in.vertex_data[5] / l_e * acos_in;
+		out.vertex_data[6] = in.vertex_data[6] / l_e * acos_in;
+		out.vertex_data[7] = in.vertex_data[7] / l_e * acos_in;
+	}
+
+	return out;
+}
+
+
+octonion marching_cubes::trad_mul_5D(octonion qA, octonion qB)
+{
+	qA.vertex_data[5] = qA.vertex_data[6] = qA.vertex_data[7] = 0;
+	qB.vertex_data[5] = qB.vertex_data[6] = qB.vertex_data[7] = 0;
+
+	octonion out;
+
+	out.vertex_data[0] = qA.vertex_data[0] * qB.vertex_data[0] - qA.vertex_data[1] * qB.vertex_data[1] - qA.vertex_data[2] * qB.vertex_data[2] - qA.vertex_data[3] * qB.vertex_data[3] - qA.vertex_data[4] * qB.vertex_data[4] - qA.vertex_data[5] * qB.vertex_data[5] - qA.vertex_data[6] * qB.vertex_data[6] - qA.vertex_data[7] * qB.vertex_data[7];
+	out.vertex_data[1] = qA.vertex_data[0] * qB.vertex_data[1] + qA.vertex_data[1] * qB.vertex_data[0] + qA.vertex_data[2] * qB.vertex_data[3] - qA.vertex_data[3] * qB.vertex_data[2] + qA.vertex_data[4] * qB.vertex_data[5] - qA.vertex_data[5] * qB.vertex_data[4] - qA.vertex_data[6] * qB.vertex_data[7] + qA.vertex_data[7] * qB.vertex_data[6];
+	out.vertex_data[2] = qA.vertex_data[0] * qB.vertex_data[2] - qA.vertex_data[1] * qB.vertex_data[3] + qA.vertex_data[2] * qB.vertex_data[0] + qA.vertex_data[3] * qB.vertex_data[1] + qA.vertex_data[4] * qB.vertex_data[6] + qA.vertex_data[5] * qB.vertex_data[7] - qA.vertex_data[6] * qB.vertex_data[4] - qA.vertex_data[7] * qB.vertex_data[5];
+	out.vertex_data[3] = qA.vertex_data[0] * qB.vertex_data[3] + qA.vertex_data[1] * qB.vertex_data[2] - qA.vertex_data[2] * qB.vertex_data[1] + qA.vertex_data[3] * qB.vertex_data[0] + qA.vertex_data[4] * qB.vertex_data[7] - qA.vertex_data[5] * qB.vertex_data[6] + qA.vertex_data[6] * qB.vertex_data[5] - qA.vertex_data[7] * qB.vertex_data[4];
+	out.vertex_data[4] = qA.vertex_data[0] * qB.vertex_data[4] - qA.vertex_data[1] * qB.vertex_data[5] - qA.vertex_data[2] * qB.vertex_data[6] - qA.vertex_data[3] * qB.vertex_data[7] + qA.vertex_data[4] * qB.vertex_data[0] + qA.vertex_data[5] * qB.vertex_data[1] + qA.vertex_data[6] * qB.vertex_data[2] + qA.vertex_data[7] * qB.vertex_data[3];
+	out.vertex_data[5] = 0;// qA.vertex_data[0] * qB.vertex_data[5] + qA.vertex_data[1] * qB.vertex_data[4] - qA.vertex_data[2] * qB.vertex_data[7] + qA.vertex_data[3] * qB.vertex_data[6] - qA.vertex_data[4] * qB.vertex_data[1] + qA.vertex_data[5] * qB.vertex_data[0] - qA.vertex_data[6] * qB.vertex_data[3] + qA.vertex_data[7] * qB.vertex_data[2];
+	out.vertex_data[6] = 0;// qA.vertex_data[0] * qB.vertex_data[6] + qA.vertex_data[1] * qB.vertex_data[7] + qA.vertex_data[2] * qB.vertex_data[4] - qA.vertex_data[3] * qB.vertex_data[5] - qA.vertex_data[4] * qB.vertex_data[2] + qA.vertex_data[5] * qB.vertex_data[3] + qA.vertex_data[6] * qB.vertex_data[0] - qA.vertex_data[7] * qB.vertex_data[1];
+	out.vertex_data[7] = 0;// qA.vertex_data[0] * qB.vertex_data[7] - qA.vertex_data[1] * qB.vertex_data[6] + qA.vertex_data[2] * qB.vertex_data[5] + qA.vertex_data[3] * qB.vertex_data[4] - qA.vertex_data[4] * qB.vertex_data[3] - qA.vertex_data[5] * qB.vertex_data[2] + qA.vertex_data[6] * qB.vertex_data[1] + qA.vertex_data[7] * qB.vertex_data[0];
 
 	return out;
 }
@@ -722,9 +837,75 @@ quintonion marching_cubes::div(const quintonion& in_a, const quintonion& in_b)
 	temp_b.vertex_data[3] = -in_b.vertex_data[3] / b_norm;
 	temp_b.vertex_data[4] = -in_b.vertex_data[4] / b_norm;
 
-	quintonion out = mul(temp_b, in_a);
-	return out;
+	quintonion a = temp_b;
+	quintonion b = in_a;
+
+	quintonion ln_a = ln(a);
+	quintonion ln_b = ln(b);
+
+	quintonion out;
+
+	out.vertex_data[0] = ln_a.vertex_data[0] + ln_b.vertex_data[0];
+	out.vertex_data[1] = ln_a.vertex_data[1] + ln_b.vertex_data[1];
+	out.vertex_data[2] = ln_a.vertex_data[2] + ln_b.vertex_data[2];
+	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
+	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
+
+	quintonion o = exp(out);
+	return o;
 }
+
+
+
+octonion marching_cubes::div(const octonion& in_a, const octonion& in_b)
+{
+	// c = a/b
+
+	// c = inv(b) * a
+	// inv(b) = conjugate(b) / norm(b)
+	// c = (conjugate(b) / norm(b)) * a
+
+	float b_norm = in_b.vertex_data[0] * in_b.vertex_data[0] +
+		in_b.vertex_data[1] * in_b.vertex_data[1] +
+		in_b.vertex_data[2] * in_b.vertex_data[2] +
+		in_b.vertex_data[3] * in_b.vertex_data[3] +
+		in_b.vertex_data[4] * in_b.vertex_data[4] + 
+		in_b.vertex_data[5] * in_b.vertex_data[5] + 
+		in_b.vertex_data[6] * in_b.vertex_data[6] + 
+		in_b.vertex_data[7] * in_b.vertex_data[7];
+
+	octonion temp_b;
+	temp_b.vertex_data[0] = in_b.vertex_data[0] / b_norm;
+	temp_b.vertex_data[1] = -in_b.vertex_data[1] / b_norm;
+	temp_b.vertex_data[2] = -in_b.vertex_data[2] / b_norm;
+	temp_b.vertex_data[3] = -in_b.vertex_data[3] / b_norm;
+	temp_b.vertex_data[4] = -in_b.vertex_data[4] / b_norm;
+	temp_b.vertex_data[5] = -in_b.vertex_data[5] / b_norm;
+	temp_b.vertex_data[6] = -in_b.vertex_data[6] / b_norm;
+	temp_b.vertex_data[7] = -in_b.vertex_data[7] / b_norm;
+
+	octonion a = temp_b;
+	octonion b = in_a;
+
+	octonion ln_a = ln(a);
+	octonion ln_b = ln(b);
+
+	octonion out;
+
+	out.vertex_data[0] = ln_a.vertex_data[0] + ln_b.vertex_data[0];
+	out.vertex_data[1] = ln_a.vertex_data[1] + ln_b.vertex_data[1];
+	out.vertex_data[2] = ln_a.vertex_data[2] + ln_b.vertex_data[2];
+	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
+	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
+	out.vertex_data[5] = ln_a.vertex_data[5] + ln_b.vertex_data[5];
+	out.vertex_data[6] = ln_a.vertex_data[6] + ln_b.vertex_data[6];
+	out.vertex_data[7] = ln_a.vertex_data[7] + ln_b.vertex_data[7];
+
+
+	octonion o = exp(out);
+	return o;
+}
+
 
 quintonion marching_cubes::mul(const quintonion& in_a, const quintonion& in_b)
 {
@@ -732,6 +913,30 @@ quintonion marching_cubes::mul(const quintonion& in_a, const quintonion& in_b)
 
 	quintonion a = in_a;
 	quintonion b = in_b;
+
+	//if (b < a)
+	//{
+	//	a = in_b;
+	//	b = in_a;
+	//}
+
+
+	//float a_len = a.magnitude();
+	//float b_len = b.magnitude();
+
+	//b = b * b_len / a_len;
+
+	//b = a;// pow_number_type(a, scale);
+
+
+	//quintonion x = div(ln(b), ln(a));
+
+	//b = pow_number_type(a, x);
+
+	//for (size_t i = 0; i < b.vertex_length; i++)
+	//	cout << b.vertex_data[i] << ' ';
+
+	//cout << endl;
 
 	quintonion ln_a = ln(a);
 	quintonion ln_b = ln(b);
@@ -764,7 +969,19 @@ quintonion marching_cubes::conj_number_type(quintonion& in)
 
 quintonion marching_cubes::pow_number_type(quintonion& in, quintonion& exponent)
 {
-	return exp(mul(ln(in), exponent));
+	quintonion ln_a = ln(ln(in));
+	quintonion ln_b = ln(exponent);
+
+	quintonion out;
+
+	out.vertex_data[0] = ln_a.vertex_data[0] + ln_b.vertex_data[0];
+	out.vertex_data[1] = ln_a.vertex_data[1] + ln_b.vertex_data[1];
+	out.vertex_data[2] = ln_a.vertex_data[2] + ln_b.vertex_data[2];
+	out.vertex_data[3] = ln_a.vertex_data[3] + ln_b.vertex_data[3];
+	out.vertex_data[4] = ln_a.vertex_data[4] + ln_b.vertex_data[4];
+
+	quintonion o = exp(out);
+	return exp(o);
 }
 
 
@@ -815,7 +1032,23 @@ quintonion marching_cubes::pow_number_type(quintonion& in, float exponent)
 }
 
 
+octonion marching_cubes::get_commutator(octonion in_a, octonion in_b)
+{
+	octonion AB = trad_mul_5D(in_a, in_b);
+	octonion BA = trad_mul_5D(in_b, in_a);
+
+	octonion C;
+
+	for (size_t i = 0; i < 5; i++)
+		C.vertex_data[i] = AB.vertex_data[i] - BA.vertex_data[i];
+
+	return C;
+}
+
+
+
 vertex_3 marching_cubes::vertex_interp_refine(
+	vector<trajectory>& trajectory_data,
 	quintonion C,
 	float z_w,
 	float isovalue,
@@ -873,7 +1106,7 @@ vertex_3 marching_cubes::vertex_interp_refine(
 
 
 
-			float x = iterate(Z, C, z_w, max_iterations, threshold);
+			float x = iterate(trajectory_data, Z, C, z_w, max_iterations, threshold);
 
 
 			float avg = (upper_threshold + lower_threshold) / 2.0f;

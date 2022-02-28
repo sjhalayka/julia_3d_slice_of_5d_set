@@ -10,7 +10,8 @@
 #include <vector>
 using std::vector;
 
-
+#include <utility> 
+using std::pair;
 
 
 
@@ -91,6 +92,36 @@ public:
 				return false;
 
 		return true;
+	}
+
+	inline bool operator<(const quintonion& right) const
+	{
+		if (right.vertex_data[0] > vertex_data[0])
+			return true;
+		else if (right.vertex_data[0] < vertex_data[0])
+			return false;
+
+		if (right.vertex_data[1] > vertex_data[1])
+			return true;
+		else if (right.vertex_data[1] < vertex_data[1])
+			return false;
+
+		if (right.vertex_data[2] > vertex_data[2])
+			return true;
+		else if (right.vertex_data[2] < vertex_data[2])
+			return false;
+
+		if (right.vertex_data[3] > vertex_data[3])
+			return true;
+		else if (right.vertex_data[3] < vertex_data[3])
+			return false;
+
+		if (right.vertex_data[4] > vertex_data[4])
+			return true;
+		else if (right.vertex_data[4] < vertex_data[4])
+			return false;
+
+		return false;
 	}
 
 	size_t vertex_length = 5;
@@ -239,6 +270,69 @@ public:
 	}
 
 	float x, y, z, w;
+};
+
+
+
+class octonion
+{
+public:
+	inline octonion(void)
+	{
+		for (size_t i = 0; i < 8; i++)
+			vertex_data[i] = 0;
+	}
+
+	float magnitude(void)
+	{
+		float result = 0;
+
+		for (size_t i = 0; i < 8; i++)
+			result += vertex_data[i] * vertex_data[i];
+
+		return sqrtf(result);
+	}
+
+
+	octonion operator+(const octonion& rhs)
+	{
+		octonion result;
+
+		for (size_t i = 0; i < 8; i++)
+			result.vertex_data[i] = vertex_data[i] + rhs.vertex_data[i];
+
+		return result;
+	}
+
+	octonion operator-(const octonion& rhs)
+	{
+		octonion result;
+
+		for (size_t i = 0; i < 8; i++)
+			result.vertex_data[i] = vertex_data[i] - rhs.vertex_data[i];
+
+		return result;
+	}
+
+
+	octonion operator*(const float& rhs)
+	{
+		octonion result;
+
+		for (size_t i = 0; i < 8; i++)
+			result.vertex_data[i] = vertex_data[i] * rhs;
+
+		return result;
+	}
+
+	float vertex_data[8];
+};
+
+
+class trajectory
+{
+public:
+	vector<vertex_3> traj_data;
 };
 
 

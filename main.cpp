@@ -6,6 +6,9 @@
 
 int main(void)
 {
+	cout << fixed << endl;
+	cout << setprecision(10) << endl;
+
 	//complex<float> a(1, 2);
 	//complex<float> b(11, 21);
 
@@ -50,8 +53,44 @@ int main(void)
 	//return 0;
 
 
+	//quintonion base_a;
+
+	//base_a.vertex_data[0] = 1;
+	//base_a.vertex_data[1] = 2;
+	//base_a.vertex_data[2] = 3;
+	//base_a.vertex_data[3] = 4;
+	//base_a.vertex_data[4] = 5;
+
+	//quintonion a = base_a;
+
+	//a = mul(a, base_a);
+
+	//for (size_t i = 0; i < a.vertex_length; i++)
+	//	cout << a.vertex_data[i] << ' ';
+
+	//cout << endl;
+
+	//a = mul(a, base_a);
+
+	//for (size_t i = 0; i < a.vertex_length; i++)
+	//	cout << a.vertex_data[i] << ' ';
+
+	//cout << endl;
+
+	//a = mul(a, base_a);
+
+	//for (size_t i = 0; i < a.vertex_length; i++)
+	//	cout << a.vertex_data[i] << ' ';
+
+	//cout << endl;
 
 
+	//return 0;
+
+
+
+	//multimap<float, float> trajectory_data;
+	vector<trajectory> trajectory_data;
 
 	vector<pair<float, float>> thresholds;
 
@@ -75,7 +114,7 @@ int main(void)
 
 	const float grid_max = 1.5;
 	const float grid_min = -grid_max;
-	const size_t res = 50;
+	const size_t res = 100;
 
 	const bool make_border = true;
 
@@ -119,14 +158,14 @@ int main(void)
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
 
-			if (z > res / 2)
+			if (0)//z > res / 2)
 				xyplane0[x * res + y] = border_value;
 			else
 			{
 				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 					xyplane0[x * res + y] = border_value;
 				else
-					xyplane0[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
+					xyplane0[x * res + y] = iterate(trajectory_data, Z, C, slice_val, max_iterations, threshold);
 			}
 		}
 	}
@@ -149,14 +188,14 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 
-				if (z > res / 2)
+				if (0)//z > res / 2)
 					xyplane1[x * res + y] = border_value;
 				else
 				{
 					if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 						xyplane1[x * res + y] = border_value;
 					else
-						xyplane1[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
+						xyplane1[x * res + y] = iterate(trajectory_data, Z, C, slice_val, max_iterations, threshold);
 				}
 			}
 		}
@@ -167,6 +206,7 @@ int main(void)
 		{
 			// Calculate triangles for the xy-planes corresponding to z - 1 and z by marching cubes
 			tesselate_adjacent_xy_plane_pair(
+				trajectory_data,
 				C, slice_val,
 				threshold,
 				thresholds[t].first,
@@ -194,6 +234,26 @@ int main(void)
 		if (0 < triangles[t].size())
 			write_triangles_to_binary_stereo_lithography_file(triangles[t], filename.c_str());
 	}
+
+
+
+
+	//cout << trajectory_data.size() << endl;
+
+	//ofstream outfile("C:\\temp\\data.txt");
+
+	//for (vector<trajectory>::const_iterator ci = trajectory_data.begin(); ci != trajectory_data.end(); ci++)
+	//{
+	//	if (ci->traj_data.size() > 0)
+	//	{
+	//		//outfile << ci->traj_data.size() << endl;
+
+	//		for (size_t i = 0; i < ci->traj_data.size(); i++)
+	//			outfile << ci->traj_data[i].x << " " << ci->traj_data[i].y << endl; // << " " << ci->traj_data[i].z << endl;
+	//	}
+	//}
+
+	//outfile.close();
 
 	return 0;
 }
